@@ -114,7 +114,8 @@ val terra: Terra = terra = Terra(
 - The `samsungHealthPermissions` argument takes a `SetOf<SamsungHealthPermissions>` from `co.tryterra.terra.samsung.SamsungHealthPermissions`. It signifies the data types you wish to request permissions for in Samsung Health. This defaults to all permissions included.
 - The `googleFitPermissions` argument takes a `SetOf<GoogleFitPermissions>` from `co.tryterra.terra.googlefit.GoogleFitPermissions`. It signifies the data types you wish to request permissions for in Google Fit. This defaults to all permissions included.
 
-The instantiation this Terra class automatically pulls up permissions requesting screens and log in screens!
+**N.B The instantiation this Terra class automatically pulls up permissions requesting screens and log in screens!
+**
 
 ## Getting Data 
 
@@ -171,7 +172,6 @@ terra.getBody(type: Terra.Resource, startDate: Date, endDate: Date){success, pay
 
 For FreeStyleLibre, you simply have to scan your sensor (only FreeStyleLibre1 is supported at the moment) and the data will be sent directly to your webhook! Please note you will need to wait for 2 vibrations!
 
-
 ### Deauthentication
 
 You can easily disconnect a user by:
@@ -182,10 +182,10 @@ terra.disconnect(Terra.Resource)
 
 ### Reinitialisation
 
-Say you deauthenticated someone from `GOOGLE_FIT`, this function allows you to reauthenticate them:
+Say you deauthenticated someone from any of the `Terra.Resource` providers, this function allows you to reauthenticate them:
 
 ```kotlin
-terra.reInit(Resource.GOOGLE_FIT)
+terra.reInit(Resource)
 ```
 
 Doing so they may also choose to log in to another Google Account instead!
