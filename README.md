@@ -114,8 +114,7 @@ val terra: Terra = terra = Terra(
 - The `samsungHealthPermissions` argument takes a `SetOf<SamsungHealthPermissions>` from `co.tryterra.terra.samsung.SamsungHealthPermissions`. It signifies the data types you wish to request permissions for in Samsung Health. This defaults to all permissions included.
 - The `googleFitPermissions` argument takes a `SetOf<GoogleFitPermissions>` from `co.tryterra.terra.googlefit.GoogleFitPermissions`. It signifies the data types you wish to request permissions for in Google Fit. This defaults to all permissions included.
 
-**N.B The instantiation this Terra class automatically pulls up permissions requesting screens and log in screens!
-**
+**N.B The instantiation this Terra class automatically pulls up permissions requesting screens and log in screens!**
 
 ## Getting Data 
 
