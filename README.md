@@ -70,8 +70,8 @@ repositories {
 Then you must include the library and the coroutines library in your app level gradle file(`build.gradle(:app)`) by adding the following lines under `dependencies`:
 
 ```gradle
+implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2'
 implementation files('libs/TerraAndroid-alpha.aar')
-implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0'
 
 ```
 
@@ -80,7 +80,7 @@ For example:
 dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2'
     implementation files('libs/TerraAndroid-alpha.aar')
 }
 ```
