@@ -108,13 +108,29 @@ val terra: Terra = terra = Terra(
             )
 ```
 
-- The `connections` argument takes a `SetOf<Connections>` from `co.tryterra.terra.Connections`. This signifies the connections you wish to make through Terra. Defaults to setting all 3 connections (FREESTYLELIBRE, SAMSUNG, and GOOGLE FIT).
 - The `bodyTimer`, `dailyTimer`, `sleepTimer`, `nutritionTimer`, and `activityTimer` arguments are the intervals at which the data for body, daily, sleep, nutrition, and activity are going to be scheduled and sent to your webhook. Defaults to 8 hours for every timer except activity for which is 20 minutes.
 - The `referenceId` argument is a unique identifer for you to use in order to map the Terra User ID to your own. Defaults to null
+
+
+You will now be able to initialise any providers you wish using:
+
+```kotlin
+terra!!.initConnection(connection = Connections.SAMSUNG, context = this, samsungHealthPermissions = setOf(SamsungHealthpermissions.ACTIVITY), googleFitPermissions = setOf(GoogleFitPermissions.DAILY)
+```
+
+- The `connection` argument takes a `Connection` from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
 - The `samsungHealthPermissions` argument takes a `SetOf<SamsungHealthPermissions>` from `co.tryterra.terra.samsung.SamsungHealthPermissions`. It signifies the data types you wish to request permissions for in Samsung Health. This defaults to all permissions included.
 - The `googleFitPermissions` argument takes a `SetOf<GoogleFitPermissions>` from `co.tryterra.terra.googlefit.GoogleFitPermissions`. It signifies the data types you wish to request permissions for in Google Fit. This defaults to all permissions included.
 
-**N.B The instantiation this Terra class automatically pulls up permissions requesting screens and log in screens!**
+**N.B Running this function automatically brings up permission and login screens! 
+
+You may then check the Terra `user_id`'s with the following function:
+
+```kotlin
+terra!!.getUserId(Terra.Resource)
+```
+
+The `Terra.Resource` parameter is from `import co.tryterra.terra.Terra.Resource`. These would (for now) be `GOOGLE_FIT`, `SAMSUNG`, `FREESTYLE_LIBRE`.
 
 ## Getting Data 
 
