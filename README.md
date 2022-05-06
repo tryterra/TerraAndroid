@@ -96,15 +96,12 @@ val terra: Terra = terra = Terra(
                 devId = <YOUR DEV ID>,
                 XAPIKey = <YOUR X API KEY>,
                 context = this, //Your App Activity
-                connections = setOf(Connections.GOOGLE_FIT, Connections.SAMSUNG),
                 bodyTimer = 60 * 60 * 1000,
                 dailyTimer = 60 * 60 * 1000,
                 sleepTimer = 60 * 60 * 1000,
                 nutritionTimer = 60 * 60 * 1000,
                 activityTimer = 60 * 60 * 1000,
                 referenceId = "testingRef",
-                samsungHealthPermissions = setOf(SamsungHealthPermissions.ACTIVITY),
-                googleFitPermissions = setOf(GoogleFitPermissions.DAILY)
             )
 ```
 
