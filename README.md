@@ -192,16 +192,6 @@ You can easily disconnect a user by:
 terra.disconnect(Terra.Resource)
 ```
 
-### Reinitialisation
-
-Say you deauthenticated someone from any of the `Terra.Resource` providers, this function allows you to reauthenticate them:
-
-```kotlin
-terra.reInit(Resource)
-```
-
-Doing so they may also choose to log in to another Google Account instead!
-
 ## Connection to REST API
 
 This package also allows you to call the "authenticateUser" and "deauthenticateUser" endpoint along with the data request endpoints provided by [Terra API](https://docs.tryterra.co). 
