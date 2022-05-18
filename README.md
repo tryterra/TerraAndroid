@@ -112,22 +112,21 @@ val terra: Terra = terra = Terra(
 You will now be able to initialise any providers you wish using:
 
 ```kotlin
-terra!!.initConnection(connection = Connections.SAMSUNG, context = this, samsungHealthPermissions = setOf(SamsungHealthpermissions.ACTIVITY), googleFitPermissions = setOf(GoogleFitPermissions.DAILY)
+terra!!.initConnection(connection = Connections.SAMSUNG, context = this, samsungHealthPermissions = setOf(SamsungHealthpermissions.ACTIVITY), googleFitPermissions = setOf(GoogleFitPermissions.DAILY, startIntent: String?)
 ```
 
 - The `connection` argument takes a `Connection` from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
 - The `samsungHealthPermissions` argument takes a `SetOf<SamsungHealthPermissions>` from `co.tryterra.terra.samsung.SamsungHealthPermissions`. It signifies the data types you wish to request permissions for in Samsung Health. This defaults to all permissions included.
 - The `googleFitPermissions` argument takes a `SetOf<GoogleFitPermissions>` from `co.tryterra.terra.googlefit.GoogleFitPermissions`. It signifies the data types you wish to request permissions for in Google Fit. This defaults to all permissions included.
+- The `startIntent` argument takes an Optional (defaults to `null`) String. It signifies the Activity for which you want to start after a FreeStyleLibre Sensor scan is complete. For example if your package name is (in your `AndroidManifest.xml`) is `co.tryterra.terrademo`, and the activity you wish to start after the scan is complete is called `MainActivity`, then you would insert: `co.tryterra.terrademo.MainActivity`. 
 
 **N.B Running this function automatically brings up permission and login screens! 
 
 You may then check the Terra `user_id`'s with the following function:
 
 ```kotlin
-terra!!.getUserId(Terra.Resource)
+terra!!.getUserId(Terra.Connections)
 ```
-
-The `Terra.Resource` parameter is from `import co.tryterra.terra.Terra.Resource`. These would (for now) be `GOOGLE_FIT`, `SAMSUNG`, `FREESTYLE_LIBRE`.
 
 ## Getting Data 
 
@@ -136,45 +135,45 @@ You can get data either from the scheduled intervals you set, or by manual queri
 ### Body Data
 
 ```kotlin
-terra.getBody(type: Terra.Resource, startDate: Date, endDate: Date)
+terra.getBody(type: Terra.Connections, startDate: Date, endDate: Date)
 ```
 
 ### Sleep Data
 
 ```kotlin
-terra.getSleep(type: Terra.Resource, startDate: Date, endDate: Date)
+terra.getSleep(type: Terra.Connections, startDate: Date, endDate: Date)
 ```
 
 ### Daily Data
 
 ```kotlin
-terra.getDaily(type: Terra.Resource, startDate: Date, endDate: Date)
+terra.getDaily(type: Terra.Connections, startDate: Date, endDate: Date)
 ```
 
 ### Activity Data
 
 ```kotlin
-terra.getActivity(type: Terra.Resource, startDate: Date, endDate: Date)
+terra.getActivity(type: Terra.Connections, startDate: Date, endDate: Date)
 ```
 
 ### Nutrition Data
 
 ```kotlin
-terra.getNutrition(type: Terra.Resource, startDate: Date, endDate: Date)
+terra.getNutrition(type: Terra.Connections, startDate: Date, endDate: Date)
 ```
 
 ### Athlete Data
 
 ```kotlin
-terra.getAthlete(type: Terra.Resource)
+terra.getAthlete(type: Terra.Connections)
 ```
 
-The `Terra.Resource` parameter is from `import co.tryterra.terra.Terra.Resource`. These would (for now) be `GOOGLE_FIT` and `SAMSUNG`.
+The `startDate` and `endDate` parameters here can take both `Date` and `Long` arguments! (`Long` for UNIX Timestamp since 1st Jan 1970)
 
 These functions will automatically send the data to your webhooks. However if needed you may also catch the data from the callback function provided:
 
 ```kotlin
-terra.getBody(type: Terra.Resource, startDate: Date, endDate: Date){success, payload ->
+terra.getBody(type: Terra.Connections, startDate: Date, endDate: Date){success, payload ->
             // success -> If the function executed successfully
             // payload -> Data following our [models](https://docs.tryterra.co/data-models-mark-ii)
         }
@@ -189,7 +188,7 @@ For FreeStyleLibre, you simply have to scan your sensor (only FreeStyleLibre1 is
 You can easily disconnect a user by:
 
 ```kotlin
-terra.disconnect(Terra.Resource)
+terra.disconnect(Terra.Connections)
 ```
 
 ## Connection to REST API
@@ -198,15 +197,15 @@ This package also allows you to call the "authenticateUser" and "deauthenticateU
 
 ### Authenticate User and Deauthenticate User
 
-The `TerraAuth` class deals with these two endpoints. First you have to initiate one:
+The `TerraAuthClient` class deals with these two endpoints. First you have to initiate one:
 
 ```kotlin
-val terraAuthClient: TerraAuth = TerraAuth("YOUR X API KEY", "YOUR DEV ID")
+val terraAuthClient: TerraAuthClient = TerraAuthClient("YOUR X API KEY", "YOUR DEV ID")
 ```
 
 and then call the following function:
 ```kotlin
-terraAuthClient.authUser(RESOURCE){it ->
+terraAuthClient.authenticateUser(RESOURCE){it ->
     //Do something with the response
         Log.i(TAG, it.toString())
     }
@@ -249,6 +248,8 @@ Using this class, you can then request for data. The following example requests 
 ```
 
 The other data functions would be : `getDaily`, `getActivity`, `getSleep`, `getNutrition`. These functions uses the same argument as the `getBody` function and all of them returns a callback with their own datamodels. The `toWebhook` argument defaults to `true` if not provided.
+
+The `startDate` and `endDate` parameters here can take both `Date` and `Long` arguments! (`Long` for UNIX Timestamp since 1st Jan 1970)
 
 The data models correspond to having fields (exactly) the same as we the ones given by our [Data Models](https://docs.tryterra.co/data-models-mark-ii)
 
