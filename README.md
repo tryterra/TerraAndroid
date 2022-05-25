@@ -112,12 +112,11 @@ val terra: Terra = terra = Terra(
 You will now be able to initialise any providers you wish using:
 
 ```kotlin
-terra!!.initConnection(connection = Connections.SAMSUNG, context = this, samsungHealthPermissions = setOf(SamsungHealthpermissions.ACTIVITY), googleFitPermissions = setOf(GoogleFitPermissions.DAILY, startIntent: String?)
+terra!!.initConnection(connection = Connections.SAMSUNG, context = this, permissions = setOf(Permissions.DAILY, Permissions.ACTIVITY), startIntent: String?)
 ```
 
 - The `connection` argument takes a `Connection` from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
-- The `samsungHealthPermissions` argument takes a `SetOf<SamsungHealthPermissions>` from `co.tryterra.terra.samsung.SamsungHealthPermissions`. It signifies the data types you wish to request permissions for in Samsung Health. This defaults to all permissions included.
-- The `googleFitPermissions` argument takes a `SetOf<GoogleFitPermissions>` from `co.tryterra.terra.googlefit.GoogleFitPermissions`. It signifies the data types you wish to request permissions for in Google Fit. This defaults to all permissions included.
+- The `permissions` argument takes a `SetOf<Permissions>` from `co.tryterra.terra.Permissions`. It signifies the data types you wish to request permissions for. This defaults to all permissions being allowed!
 - The `startIntent` argument takes an Optional (defaults to `null`) String. It signifies the Activity for which you want to start after a FreeStyleLibre Sensor scan is complete. For example if your package name is (in your `AndroidManifest.xml`) is `co.tryterra.terrademo`, and the activity you wish to start after the scan is complete is called `MainActivity`, then you would insert: `co.tryterra.terrademo.MainActivity`. **N.B This functionality only works if your Intent extends to Activity or AppCompatActivity**
 
 **N.B Running this function automatically brings up permission and login screens! 
