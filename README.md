@@ -180,7 +180,19 @@ terra.getBody(type: Terra.Connections, startDate: Date, endDate: Date){success, 
 
 ### FreeStyleLibre Specifics
 
+**Make sure you initialised a FreestyleLibre Connection!!**
+
 For FreeStyleLibre, you simply have to scan your sensor (only FreeStyleLibre1 is supported at the moment) and the data will be sent directly to your webhook! Please note you will need to wait for 2 vibrations!
+
+To activate a new sensor (Currently only Libre 1 is supported):
+
+Run the function:
+
+```kotlin
+terra.activateSensor()
+```
+After doing so, you may do a scan and the scan will attempt to activate your sensor!
+
 
 ### Deauthentication
 
