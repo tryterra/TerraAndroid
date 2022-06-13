@@ -48,44 +48,9 @@ Nothing. Really ;)
 
 ## Installation
 
-Download the `.aar` file from this repository and include it within the `app/libs` folder in your project structure. You may now add it as a dependency in your gradle configuration files. In your project level gradle file (`build.gradle(:Project)`), edit the `repositories` to include:
+The library is part of `mavenCentral()`! You can simply install it by adding it as a dependency in your app gradle file:
 
-```gradle
-flatDir{
-  dirs 'libs'
-}
-```
-
-For example:
-```gradle
-repositories {
-    google()
-    mavenCentral()
-    flatDir {
-        dirs 'libs'
-    }
-}
-```
-
-Then you must include the library and the coroutines library in your app level gradle file(`build.gradle(:app)`) by adding the following lines under `dependencies`:
-
-```gradle
-implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2'
-implementation files('libs/TerraAndroid-alpha.aar')
-
-```
-
-For example:
-```gradle
-dependencies {
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.2'
-    implementation files('libs/TerraAndroid-alpha.aar')
-}
-```
-
-You may now import classes from the library as: `import co.tryterra.terra.(Every class in this library imaginable (except private ones))`
+`implementation co.tryterra:terra-android:1.0.0`
 
 ## Using the library!
 
