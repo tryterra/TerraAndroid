@@ -50,7 +50,7 @@ Nothing. Really ;)
 
 The library is part of `mavenCentral()`! You can simply install it by adding it as a dependency in your app gradle file:
 
-`implementation co.tryterra:terra-android:1.0.1`
+`implementation co.tryterra:terra-android:1.0.2`
 
 ## Using the library!
 
