@@ -59,7 +59,7 @@ To connect to Samsung Health, Google Fit, or FreeStyleLibre1, you will need to i
 ```kotlin
 val terra: Terra = terra = Terra(
                 devId = <YOUR DEV ID>,
-                XAPIKey = <YOUR X API KEY>,
+                // XAPIKey = <YOUR X API KEY>, // From TerraAndroid1.0.4 onwards, this is not required!
                 context = this, //Your App Activity
                 bodyTimer = 60 * 60 * 1000,
                 dailyTimer = 60 * 60 * 1000,
@@ -77,12 +77,15 @@ val terra: Terra = terra = Terra(
 You will now be able to initialise any providers you wish using:
 
 ```kotlin
-terra!!.initConnection(connection = Connections.SAMSUNG, context = this, permissions = setOf(Permissions.DAILY, Permissions.ACTIVITY), startIntent: String?)
+terra!!.initConnection(connection: Connections, token: String, context: Context, permissions = Set<Permissions>, schedulerOn: Boolean,  startIntent: String?, callback: (Boolean) -> Unit)
 ```
 
 - The `connection` argument takes a `Connection` from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
+- The `token` parameter is a token for authentication. Generate one using the endpoint: https://docs.tryterra.co/reference/generate-authentication-token
 - The `permissions` argument takes a `SetOf<Permissions>` from `co.tryterra.terra.Permissions`. It signifies the data types you wish to request permissions for. This defaults to all permissions being allowed!
+- The `schedulerOn` argument controls whether to turn on the scheduler or not.
 - The `startIntent` argument takes an Optional (defaults to `null`) String. It signifies the Activity for which you want to start after a FreeStyleLibre Sensor scan is complete. For example if your package name is (in your `AndroidManifest.xml`) is `co.tryterra.terrademo`, and the activity you wish to start after the scan is complete is called `MainActivity`, then you would insert: `co.tryterra.terrademo.MainActivity`. **N.B This functionality only works if your Intent extends to Activity or AppCompatActivity**
+- The `callback` argument is a callback function dictating whether the initialisation was successful **RECOMMEND TO WAIT FOR THIS FUNCTION BEFORE PROCEEDIDNG**
 
 **N.B Running this function automatically brings up permission and login screens! 
 
