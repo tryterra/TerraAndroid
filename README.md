@@ -3,7 +3,7 @@
 This library allows developers to connect to Samsung Health, GoogleFit, and FreestyleLibre1 through Terra on Androids! It also contains necessary functions and classes to connect to the Terra REST API if so needed!
 
 ## The boring stuff
-This library was built on Android Studio Artic Fox with Kotlin 1.6 (jvmTarget 1.8). This package targets a minimum SDK version of 28 (Android PIE). 
+This library was built on Android Studio Artic Fox with Kotlin 1.6 (jvmTarget 1.8). This package targets a minimum SDK version of 26 (Android OREO). 
 
 ## The useful yet boring stuff
 
