@@ -1,6 +1,10 @@
 # TerraAndroid
 
-This library allows developers to connect to Samsung Health, GoogleFit, and FreestyleLibre1 through Terra on Androids! It also contains necessary functions and classes to connect to the Terra REST API if so needed!
+This library allows developers to connect to all integrations provided by [Terra](https://tryterra.co) in one easy to install library!
+
+Docs are updated to newest version: 1.1.0
+
+For docs on older versions please see [here](https://github.com/tryterra/TerraAndroid/blob/79b2c265cfc6292d52cb96dc36e1a3438200471c/README.md)
 
 ## Quickstart
 
@@ -13,7 +17,9 @@ This library was built on Android Studio Artic Fox with Kotlin 1.6 (jvmTarget 1.
 
 ## The useful yet boring stuff
 
-As mentioned, this library has functionality to connect to Samsung Health, Google Fit and FreeStyleLibre1
+This library can be broken into two parts: 
+- Samsung Health, GoogleFit and FreeStyleLibre in-app integrations
+- REST API integrations
 
 ### For Samsung Health
 
@@ -56,7 +62,7 @@ Nothing. Really ;)
 
 The library is part of `mavenCentral()`! You can simply install it by adding it as a dependency in your app gradle file:
 
-`implementation co.tryterra:terra-android:1.0.4`
+`implementation co.tryterra:terra-android:1.1.0`
 
 ## Using the library!
 
@@ -64,36 +70,34 @@ To connect to Samsung Health, Google Fit, or FreeStyleLibre1, you will need to i
 
 ```kotlin
 val terra: Terra = terra = Terra(
-                devId = <YOUR DEV ID>,
-                // XAPIKey = <YOUR X API KEY>, // From TerraAndroid1.0.4 onwards, this is not required!
-                context = this, //Your App Activity
-                bodyTimer = 60 * 60 * 1000,
-                dailyTimer = 60 * 60 * 1000,
-                sleepTimer = 60 * 60 * 1000,
-                nutritionTimer = 60 * 60 * 1000,
-                activityTimer = 60 * 60 * 1000,
-                referenceId = "testingRef",
+                devId = String,
+                context = Context,
+                referenceId = String
+                completion = (Boolean) -> Unit
             )
 ```
 
-- The `bodyTimer`, `dailyTimer`, `sleepTimer`, `nutritionTimer`, and `activityTimer` arguments are the intervals at which the data for body, daily, sleep, nutrition, and activity are going to be scheduled and sent to your webhook. Defaults to 8 hours for every timer except activity for which is 20 minutes.
-- The `referenceId` argument is a unique identifer for you to use in order to map the Terra User ID to your own. Defaults to null
+**Arguments**
+- `devId: String` ➡ The developer identifier given to your after you signed up on [Terra](https://dashboard.tryterra.co)
+- `context: Context` ➡ Any application/activity context that ideally superclasses or is an instance of `android.app.Activity`
+- `referenceId: String` ➡ A unique identifer for you to use in order to map the Terra User ID to your own. Defaults to null
+- `completion: (Boolean) -> Unit` ➡ A callback function that is called after the terra instance has been initialised. 
 
+**You will need to initialise this class everytime your app comes up from terminated or stopped state. It sets up all the previous connections that has been initialised**
 
-You will now be able to initialise any providers you wish using:
+Using this class, you may now initiate any connections you wish under the `Connections` enum:
 
 ```kotlin
-terra!!.initConnection(connection: Connections, token: String, context: Context, permissions = Set<Permissions>, schedulerOn: Boolean,  startIntent: String?, callback: (Boolean) -> Unit)
+terra.initConnection(connection: Connections, token: String, context: Context, schedulerOn: Boolean, startIntent: String?, callback: (Boolean) -> Unit)
 ```
 
-- The `connection` argument takes a `Connection` from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
-- The `token` parameter is a token for authentication. Generate one using the endpoint: https://docs.tryterra.co/reference/generate-authentication-token
-- The `permissions` argument takes a `SetOf<Permissions>` from `co.tryterra.terra.Permissions`. It signifies the data types you wish to request permissions for. This defaults to all permissions being allowed!
-- The `schedulerOn` argument controls whether to turn on the scheduler or not.
-- The `startIntent` argument takes an Optional (defaults to `null`) String. It signifies the Activity for which you want to start after a FreeStyleLibre Sensor scan is complete. For example if your package name is (in your `AndroidManifest.xml`) is `co.tryterra.terrademo`, and the activity you wish to start after the scan is complete is called `MainActivity`, then you would insert: `co.tryterra.terrademo.MainActivity`. **N.B This functionality only works if your Intent extends to Activity or AppCompatActivity**
-- The `callback` argument is a callback function dictating whether the initialisation was successful **RECOMMEND TO WAIT FOR THIS FUNCTION BEFORE PROCEEDIDNG**
+- `connection: Connections` ➡ A `Connection` enum from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
+- `token: String` ➡ A token for authentication. Generate one using the endpoint: https://docs.tryterra.co/reference/generate-authentication-token
+- `schedulerOn: Boolean` ➡ Boolean controls whether to turn on the scheduler or not.
+- `startIntent: String?` ➡ Optional (defaults to `null`) String. It signifies the Activity for which you want to start after a FreeStyleLibre Sensor scan is complete. For example if your package name is (in your `AndroidManifest.xml`) is `co.tryterra.terrademo`, and the activity you wish to start after the scan is complete is called `MainActivity`, then you would insert: `co.tryterra.terrademo.MainActivity`. **N.B This functionality only works if your Intent extends from Activity**
+- `callback: (Boolean) -> Unit` ➡ A callback function dictating whether the initialisation was successful **RECOMMEND TO WAIT FOR THIS FUNCTION BEFORE PROCEEDIDNG**
 
-**N.B Running this function automatically brings up permission and login screens! 
+**N.B Running this function automatically brings up permission and login screens! You only need to execute this once per connection** 
 
 You may then check the Terra `user_id`'s with the following function:
 
@@ -151,21 +155,50 @@ terra.getBody(type: Terra.Connections, startDate: Date, endDate: Date){success, 
             // payload -> Data following our [models](https://docs.tryterra.co/data-models-mark-ii)
         }
 ```
+### Revoke Permissions
+Mainly for users to revoke permissions to your app. i.e for Samsung Health, it will pull up permissions screen and for Google Fit, it will sign the user out and revoke all scope permissions.
+
+```kotlin
+terra!.revokePermissions(type: Connections)
+```
+
+### Disconnect
+We recommend performing disconnects from your backend! Simply calling our deauthentication endpoint with the user Id from `getUserId(connection: Connections)`. However we still let you do disconnect within SDK (mainly for testing purposes):
+
+```kotlin
+Terra.disconnect(userId: String, devId: String, xAPIKey: String)
+```
+
 
 ### FreeStyleLibre Specifics
 
 **Make sure you initialised a FreestyleLibre Connection!!**
 
-For FreeStyleLibre, you simply have to scan your sensor (only FreeStyleLibre1 is supported at the moment) and the data will be sent directly to your webhook! Please note you will need to wait for 2 vibrations with the second one being much stronger and lasts 1 second!
+For FreeStyleLibre, you simply have to scan your sensor and the data will be sent directly to your webhook! Please note you will need to wait for 2 vibrations with the second one being much stronger and lasts 1 second!
 
-To activate a new sensor (Currently only Libre 1 and 2 is supported):
+**A scan will try to activate the sensor immediately if it's not active! *8
 
-Run the function:
+We also provide a callback function for data:
 
 ```kotlin
-terra.activateSensor()
+terra.readGlucoseData(completion: (FSLSensorDetails?) -> Unit)
 ```
-After doing so, you may do a scan and the scan will attempt to activate your sensor! After that, the next scan will attempt to read.
+
+This function polls the phone till a reading is done. There is a default timeout of 60 seconds. If no scan happens in 60 seconds, the completion callback will callback with `null`.
+
+Otherwise, it will complete with `FSLSensorDetails?` with the following structure:
+
+```kotlin
+data class FSLSensorDetails(
+    val sensor_state: String,
+    val status: String,
+    var serial_number: String = "",
+    var data: TerraGlucoseData = TerraGlucoseData()
+)
+```
+
+`TerraGlucoseData` follows the same structure as shown in our [glucose data field from our models](https://docs.tryterra.co/reference/v2#body)
+
 
 
 ## Connection to REST API
