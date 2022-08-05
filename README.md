@@ -85,6 +85,8 @@ val terra: Terra = terra = Terra(
 
 **You will need to initialise this class everytime your app comes up from terminated or stopped state. It sets up all the previous connections that has been initialised**
 
+**Warning: This call can throw an `TerraInvalidRequest` error! This happens when your `dev-id` is inactive/has reached user limits!**
+
 Using this class, you may now initiate any connections you wish under the `Connections` enum:
 
 ```kotlin
@@ -98,6 +100,9 @@ terra.initConnection(connection: Connections, token: String, context: Context, s
 - `callback: (Boolean) -> Unit` ➡ A callback function dictating whether the initialisation was successful **RECOMMEND TO WAIT FOR THIS FUNCTION BEFORE PROCEEDIDNG**
 
 **N.B Running this function automatically brings up permission and login screens! You only need to execute this once per connection** 
+
+**Warning: This call can throw an `TerraClassNotInitiated` error! This happens you try to call this function before the `Terra` class's completion callback is called!**
+
 
 You may then check the Terra `user_id`'s with the following function:
 
