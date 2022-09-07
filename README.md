@@ -2,7 +2,7 @@
 
 This library allows developers to connect to all integrations provided by [Terra](https://tryterra.co) in one easy to install library!
 
-Docs are updated to newest version: 1.1.0
+Docs are updated to newest version: 1.2.0
 
 For docs on older versions please see [here](https://github.com/tryterra/TerraAndroid/blob/79b2c265cfc6292d52cb96dc36e1a3438200471c/README.md)
 
@@ -66,7 +66,7 @@ The library is part of `mavenCentral()`! You can simply install it by adding it 
 
 ## Using the library!
 
-To connect to Samsung Health, Google Fit, or FreeStyleLibre1, you will need to instantiate a Terra Class as follows:
+To connect to Samsung Health, Google Fit, or FreeStyleLibre, you will need to instantiate a Terra Class as follows:
 
 ```kotlin
 val terra: Terra = terra = Terra(
@@ -90,11 +90,12 @@ val terra: Terra = terra = Terra(
 Using this class, you may now initiate any connections you wish under the `Connections` enum:
 
 ```kotlin
-terra.initConnection(connection: Connections, token: String, context: Context, schedulerOn: Boolean, startIntent: String?, callback: (Boolean) -> Unit)
+terra.initConnection(connection: Connections, token: String, context: Context, customPermissions: Set<CustomPermissions>, schedulerOn: Boolean, startIntent: String?, callback: (Boolean) -> Unit)
 ```
 
 - `connection: Connections` ➡ A `Connection` enum from `co.tryterra.terra.Connections`. This signifies the connection you wish to make through Terra. There are currently 3 connections you could make: FREESTYLE_LIBRE, SAMSUNG, and GOOGLE_FIT
 - `token: String` ➡ A token for authentication. Generate one using the endpoint: https://docs.tryterra.co/reference/generate-authentication-token
+- `customPermissions: Set<CustomPermissions>` - A set of custom permissions from `co.tryterra.terra.enums.CustomPermission`. This will affect what is requested from the integration you choose to connect for. 
 - `schedulerOn: Boolean` ➡ Boolean controls whether to turn on the scheduler or not.
 - `startIntent: String?` ➡ Optional (defaults to `null`) String. It signifies the Activity for which you want to start after a FreeStyleLibre Sensor scan is complete. For example if your package name is (in your `AndroidManifest.xml`) is `co.tryterra.terrademo`, and the activity you wish to start after the scan is complete is called `MainActivity`, then you would insert: `co.tryterra.terrademo.MainActivity`. **N.B This functionality only works if your Intent extends from Activity**
 - `callback: (Boolean) -> Unit` ➡ A callback function dictating whether the initialisation was successful **RECOMMEND TO WAIT FOR THIS FUNCTION BEFORE PROCEEDIDNG**
@@ -109,6 +110,41 @@ You may then check the Terra `user_id`'s with the following function:
 ```kotlin
 terra!!.getUserId(Terra.Connections)
 ```
+## Subscriptions (new in 1.2.0)
+
+You can now subscribe for a specific type of data! First, you will have to set a update handler (ideally before any processing happens or before you initialise Terra). 
+
+```kotlin
+Terra.updateHandler = {dType: DataTypes, update: Update -> 
+  // Do processing with data here
+}
+```
+
+`Update` takes the form:
+
+```kotlin
+
+data class Update(
+    var lastUpdated: Instant,
+    var samples: List<TerraData>
+)
+
+data class TerraData(
+    var value: Double,
+    var timestamp: Instant
+)
+
+```
+
+After doing so, you will simply have to run (once):
+
+```kotin
+terra.subscribe(forDataTypes: Set<DataTypes>)
+```
+
+This function throws: `NotAuthenticated` and `NoUpdateHandlerDetected` errors! Please handle them appropriately. 
+
+The idea here is that anytime a new update for the data type is detected, your update handler will be called! The next time your app opens, it will call your update handler with the data that has been missed between the time your app terminated to your app reopening.
 
 ## Getting Data 
 
